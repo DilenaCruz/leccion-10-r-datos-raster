@@ -1,7 +1,7 @@
 ---
 title: "El lenguaje de programación R - Datos raster"
 author: "Manuel Vargas"
-date: "2020-06-10"
+date: "2020-06-11"
 output:
   html_document:
     theme: readable    
@@ -108,6 +108,9 @@ Para ejemplificar el uso del paquete ```raster```, se accederá a la base de dat
 # Directorio de trabajo (DEBE USARSE UN DIRECTORIO EXISTENTE EN EL DISCO)
 setwd("c:/users/mfvargas/")
 
+# Consulta del directorio de trabajo
+getwd()
+
 # Datos de altitud
 altitude <- getData("worldclim", var="alt", res=.5, lon=-84, lat=10)
 
@@ -116,6 +119,15 @@ cr_altitude <- crop(altitude, extent(-86, -82.3, 8, 11.3))
 
 # Resumen de información básica de la capa raster
 cr_altitude
+```
+
+#### Tipos de datos
+El paquete ```raster``` define dos tipos de datos principales:
+
+**RasterLayer**: almacena una sola capa.
+```{r}
+# Clase de cr_altitude
+class(cr_altitude)
 
 # Cantidad de capas
 nlayers(cr_altitude)
@@ -124,7 +136,29 @@ nlayers(cr_altitude)
 plot(cr_altitude)
 ```
 
-Mapa Leaflet
+**RasterBrick**: almacena varias capas, las cuales generalmente provienen de un mismo origen (ej. una imagen satelital).
+```{r}
+# Datos de precipitación
+precipitation <- getData("worldclim", var="prec", res=.5, lon=-84, lat=10)
+
+# Datos de precipitación recortados para los límites aproximados de Costa Rica
+cr_precipitation <- crop(precipitation, extent(-86, -82.3, 8, 11.3))
+
+# Clase de cr_precipitacion
+class(cr_precipitation)
+
+# Cantidad de capas
+nlayers(cr_precipitation)
+
+# Mapeo
+plot(cr_precipitation)
+```
+
+**RasterStack**: también almacena varias capas, pero a diferencia de ```RasterBrick```, estas provienen de diferentes fuentes. 
+
+#### Confección de mapas
+
+Ejemplo de mapa en Leaflet
 ```{r results='hide', warning = FALSE}
 # Paleta de colores
 pal <- colorNumeric(
