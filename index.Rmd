@@ -150,6 +150,9 @@ class(cr_precipitation)
 # Cantidad de capas
 nlayers(cr_precipitation)
 
+# Lista e información sobre las capas
+unlist(cr_precipitation)
+
 # Mapeo
 plot(cr_precipitation)
 ```
@@ -207,4 +210,48 @@ m <- leaflet() %>%
 ```{r}
 # Despliegue del mapa
 m
+```
+
+# Análisis
+```{r results='hide', warning = FALSE}
+# Directorio de trabajo (DEBE USARSE UN DIRECTORIO EXISTENTE EN EL DISCO)
+setwd("c:/users/mfvargas/")
+
+# Consulta del directorio de trabajo
+getwd()
+
+# Datos de altitud
+altitude <- getData("worldclim", var="alt", res=.5, lon=-84, lat=10)
+
+# Datos de altitud recortados para los límites aproximados de Costa Rica
+cr_altitude <- 
+  getData("worldclim", var="alt", res=.5, lon=-84, lat=10) %>%
+  crop(extent(-86, -82.3, 8, 11.3))
+
+# Registros de presencia de Ara ambiguus (lapa verde) en Costa Rica
+cr_ara_ambiguus <-
+  st_read(
+    "https://raw.githubusercontent.com/geoprocesamiento-2020i/datos/master/biodiversidad/registros-presencia/cr/cr-ara-ambiguus.geojson"
+  )
+
+# Registros de presencia de Pharomachrus mocinno (quetzal) en Costa Rica
+cr_pharomachrus_mocinno <-
+  st_read(
+    "https://raw.githubusercontent.com/geoprocesamiento-2020i/datos/master/biodiversidad/registros-presencia/cr/cr_pharomachrus_mocinno.geojson"
+  )
+
+
+# Mapeo
+plot(cr_altitude, axes=TRUE, graticule=TRUE, reset=FALSE)
+plot(cr_ara_ambiguus, col="black", add=TRUE)
+
+# Altitudes de los puntos de Ara ambiguus
+alt_ara_ambiguus <- extract(cr_altitude, cr_ara_ambiguus)
+# Impresión 
+alt_ara_ambiguus
+
+# Altitudes de los puntos de Pharomachrus mocinno
+alt_pharomachrus_mocinno <- extract(cr_altitude, cr_pharomachrus_mocinno)
+# Impresión 
+alt_pharomachrus_mocinno
 ```
