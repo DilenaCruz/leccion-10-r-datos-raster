@@ -221,12 +221,34 @@ setwd("c:/users/mfvargas/")
 getwd()
 
 # Datos de altitud
-altitude <- getData("worldclim", var="alt", res=.5, lon=-84, lat=10)
+altitud <- getData("worldclim", var="alt", res=.5, lon=-84, lat=10)
 
 # Datos de altitud recortados para los límites aproximados de Costa Rica
-cr_altitude <- 
-  getData("worldclim", var="alt", res=.5, lon=-84, lat=10) %>%
+cr_altitud_aproximada <- 
+  altitud %>%
   crop(extent(-86, -82.3, 8, 11.3))
+plot(cr_altitud_aproximada)
+
+# Recorte para el contorno de Costa Rica
+# 1. Capa de provincias
+url_base_wfs_ign_5mil <- "http://geos.snitcr.go.cr/be/IGN_5/wfs?"
+solicitud_provincias_wfs <- "request=GetFeature&service=WFS&version=2.0.0&typeName=IGN_5:limiteprovincial_5k&outputFormat=application/json"
+cr_provincias <-
+  st_read(paste0(url_base_wfs_ign_5mil, solicitud_provincias_wfs)) %>%
+  st_simplify(dTolerance = 1000) %>%
+  st_transform(4326)
+
+# 2. Recorte
+cr_altitud <-
+  altitud %>%
+  crop(cr_provincias) %>%
+  mask(cr_provincias)
+
+# 3. Mapeo de todo el territorio
+plot(cr_altitud)
+# 4. Mapeo de solo la parte continental
+plot(cr_altitud, ext=extent(-86, -82.3, 8, 11.3))
+
 
 # Registros de presencia de Ara ambiguus (lapa verde) en Costa Rica
 cr_ara_ambiguus <-
@@ -240,19 +262,51 @@ cr_pharomachrus_mocinno <-
     "https://raw.githubusercontent.com/geoprocesamiento-2020i/datos/master/biodiversidad/registros-presencia/cr/cr_pharomachrus_mocinno.geojson"
   )
 
-
 # Mapeo
-plot(cr_altitude, axes=TRUE, graticule=TRUE, reset=FALSE)
+plot(cr_altitud, ext=extent(-86, -82.3, 8, 11.3), axes=TRUE, graticule=TRUE, reset=FALSE)
 plot(cr_ara_ambiguus, col="green", add=TRUE)
-plot(cr_pharomachrus_mocinno, col="blue", add=TRUE)
+plot(cr_pharomachrus_mocinno, col="black", add=TRUE)
+
+# Mapa de altitud del área de Ara ambiguus
+plot(cr_altitud, 
+     ylim=c(min(cr_ara_ambiguus$decimalLatitude), 
+            max(cr_ara_ambiguus$decimalLatitude)
+          ), 
+     xlim=c(min(cr_ara_ambiguus$decimalLongitude), 
+            max(cr_ara_ambiguus$decimalLongitude)
+          ),
+     reset=FALSE
+)
+plot(cr_ara_ambiguus, col="black", add=TRUE)
+
+# Mapa de altitud del área de Pharomachrus mocinno
+plot(cr_altitud, 
+     ylim=c(min(cr_pharomachrus_mocinno$decimalLatitude), 
+            max(cr_pharomachrus_mocinno$decimalLatitude)
+          ), 
+     xlim=c(min(cr_pharomachrus_mocinno$decimalLongitude), 
+            max(cr_pharomachrus_mocinno$decimalLongitude)
+          ),
+     reset=FALSE
+)
+plot(cr_pharomachrus_mocinno, col="black", add=TRUE)
 
 # Altitudes de los puntos de Ara ambiguus
-alt_ara_ambiguus <- extract(cr_altitude, cr_ara_ambiguus)
+alt_ara_ambiguus <- extract(cr_altitud, cr_ara_ambiguus)
 # Impresión 
 alt_ara_ambiguus
 
 # Altitudes de los puntos de Pharomachrus mocinno
-alt_pharomachrus_mocinno <- extract(cr_altitude, cr_pharomachrus_mocinno)
+alt_pharomachrus_mocinno <- extract(cr_altitud, cr_pharomachrus_mocinno)
 # Impresión 
 alt_pharomachrus_mocinno
+```
+
+# Ejercicios
+1. Genere un mapa de altitud para la provincia de Heredia y otro para la provincia de San José
+```{}
+```
+
+2. Genere un mapa de altitud para una especie diferente a las utilizadas durante la lección
+```{}
 ```
