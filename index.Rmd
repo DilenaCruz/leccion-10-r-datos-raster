@@ -243,7 +243,8 @@ cr_pharomachrus_mocinno <-
 
 # Mapeo
 plot(cr_altitude, axes=TRUE, graticule=TRUE, reset=FALSE)
-plot(cr_ara_ambiguus, col="black", add=TRUE)
+plot(cr_ara_ambiguus, col="green", add=TRUE)
+plot(cr_pharomachrus_mocinno, col="blue", add=TRUE)
 
 # Altitudes de los puntos de Ara ambiguus
 alt_ara_ambiguus <- extract(cr_altitude, cr_ara_ambiguus)
