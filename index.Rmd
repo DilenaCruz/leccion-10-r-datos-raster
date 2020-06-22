@@ -18,7 +18,7 @@ library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Recursos de interés
+# Recursos de interés
 * [Geocomputation with R - Chapter 2 Geographic data in R - Raster data](https://geocompr.robinlovelace.net/spatial-class.html#raster-data)
 * [Geocomputation with R - Chapter 3 Attribute data operations - Manipulating raster objects](https://geocompr.robinlovelace.net/attr.html#manipulating-raster-objects)
 * [Geocomputation with R - Chapter 4 Spatial data operations - Spatial operations on raster data](https://geocompr.robinlovelace.net/spatial-operations.html#spatial-ras)
@@ -29,7 +29,7 @@ knitr::opts_chunk$set(echo = TRUE)
 * Sitio web del curso: [GF-0604: Procesamiento de datos geográficos](https://geoprocesamiento-2020i.github.io/).
 * Datos utilizados durante el curso: [Datos del curso GF-0604: Procesamiento de datos geográficos](https://github.com/geoprocesamiento-2020i/datos).
 
-## Preparativos
+# Preparativos
 Paquetes
 ```{r results='hide', warning = FALSE, message=FALSE}
 # Paquete para manejo de datos vectoriales
@@ -51,7 +51,7 @@ cr_ara_ambiguus <-
   )
 ```
 
-## El modelo de datos raster
+# El modelo de datos raster
 El modelo de datos raster usualmente consiste de un encabezado y de una matriz con celdas (también llamadas pixeles) de un mismo tamaño. El encabezado define el [sistema de referencia de coordenadas (CRS)](https://en.wikipedia.org/wiki/Spatial_reference_system), la extensión y el punto de origen de una capa raster. Por lo general, el origen se ubica en la esquina inferior izquierda o en la esquina superior izquierda de la matriz. La extensión se define mediante el número de filas, el número de columnas y el tamaño (resolución) de la celda.
 
 Cada celda tiene una identificación (ID) y almacena un único valor, el cual puede ser numérico o categórico, como se muestra en la figura 1. 
@@ -64,12 +64,12 @@ Los mapas raster generalmente almacenan fenómenos continuos como elevación, pr
 
 ![Figura 2: Ejemplos de mapas raster continuos y categóricos. Imagen de Robin Lovelace et al. (https://geocompr.robinlovelace.net/spatial-class.html#raster-data)](img/raster_continuo_categorico.png)
 
-## El paquete raster
+# El paquete raster
 El paquete [raster](https://cran.r-project.org/web/packages/raster/) proporciona funciones para la lectura, escritura, manipulación, análisis y modelado de datos raster.
 
 El paquete [rgdal](https://cran.r-project.org/web/packages/rgdal/) provee enlaces a las bibliotecas [GDAL](https://gdal.org/) y [PROJ](https://proj.org/).
 
-### Instalación, carga y documentación
+## Instalación, carga y documentación
 Instalación
 ```{r eval = F}
 # Instalación del paquete raster
@@ -98,10 +98,10 @@ Documentación:
 - [The raster package -- R Spatial](https://rspatial.org/raster/pkg/)  
 - [raster: Geographic Data Analysis and Modeling](https://rdrr.io/cran/raster/)
 
-### Formatos raster
+## Formatos raster
 El paquete _raster_ puede leer y escribir en una gran cantidad de [formatos raster](https://gdal.org/drivers/raster/) a través de la biblioteca GDAL.
 
-### Uso básico
+## Uso básico
 Para ejemplificar el uso del paquete ```raster```, se accederá a la base de datos climáticos [WorldClim](https://www.worldclim.org/), mediante la función [getData()](https://rdrr.io/cran/raster/man/getData.html).
 
 ```{r}
@@ -121,7 +121,7 @@ cr_altitude <- crop(altitude, extent(-86, -82.3, 8, 11.3))
 cr_altitude
 ```
 
-#### Tipos de datos
+## Tipos de datos
 El paquete ```raster``` define dos tipos de datos principales:
 
 **RasterLayer**: almacena una sola capa.
@@ -159,7 +159,7 @@ plot(cr_precipitation)
 
 **RasterStack**: también almacena varias capas, pero a diferencia de ```RasterBrick```, estas provienen de diferentes fuentes. 
 
-#### Confección de mapas
+## Confección de mapas
 
 Ejemplo de mapa en Leaflet
 ```{r results='hide', warning = FALSE}
@@ -303,10 +303,10 @@ alt_pharomachrus_mocinno
 ```
 
 # Ejercicios
-1. Genere un mapa de altitud para la provincia de Heredia y otro para la provincia de San José
-```{}
+1. Genere un mapa de altitud para la provincia de Heredia y otro para la provincia de San José.
+```{r}
 ```
 
-2. Genere un mapa de altitud para una especie diferente a las utilizadas durante la lección
-```{}
+2. Genere un mapa de altitud para una especie diferente a las utilizadas durante la lección. Puede utilizar datos de la [Infraestructura Mundial de Información en Biodiversidad (GBIF)](https://www.gbif.org/).
+```{r}
 ```
