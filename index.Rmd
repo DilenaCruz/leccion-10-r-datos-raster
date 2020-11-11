@@ -1,6 +1,6 @@
 ---
 title: "El lenguaje de programación R - Datos raster"
-author: "Manuel Vargas"
+author: "Dilena Cruz-Fernández"
 date: "2020-11-04"
 output:
   html_document:
@@ -39,6 +39,9 @@ library(dplyr)
 
 # Paquete para mapas en la Web
 library(leaflet)
+
+library (raster)
+library (rgdal)
 ```
 
 Datos para ejemplos
@@ -111,7 +114,7 @@ Para ejemplificar el uso del paquete ```raster```, se accederá a la base de dat
 
 ```{r}
 # Directorio de trabajo (DEBE USARSE UN DIRECTORIO EXISTENTE EN EL DISCO)
-setwd("c:/users/mfvargas/")
+setwd("C:/Users/Dilena/OneDrive/UCR/GIRH-LAC/Programación con R (Manuel Vargas)/Clases/leccion-10-r-datos-raster/capas")
 
 # Consulta del directorio de trabajo
 getwd()
@@ -206,14 +209,15 @@ m <- leaflet() %>%
   addLegend(
     pal = pal, 
     values = values(cr_altitud), 
-    title = "Altitud"
+    title = "Altitud",
+    group = "Altitud"
   ) %>%
   addMiniMap(
     toggleDisplay = TRUE,
     position = "bottomleft",
     tiles = providers$Stamen.TonerLite
   )
-```
+ ```
 
 ```{r}
 # Despliegue del mapa
@@ -223,7 +227,7 @@ m
 # Análisis
 ```{r results='hide', warning = FALSE}
 # Directorio de trabajo (DEBE USARSE UN DIRECTORIO EXISTENTE EN EL DISCO)
-setwd("c:/users/mfvargas/")
+setwd("C:/Users/Dilena/OneDrive/UCR/GIRH-LAC/Programación con R (Manuel Vargas)/Clases/leccion-10-r-datos-raster/capas")
 
 # Consulta del directorio de trabajo
 getwd()
@@ -246,6 +250,8 @@ cr_provincias <-
   st_read(paste0(url_base_wfs_ign_5mil, solicitud_provincias_wfs)) %>%
   st_simplify(dTolerance = 1000) %>%
   st_transform(4326)
+
+plot(cr_provincias$geometry)
 
 # 2. Recorte
 cr_altitud <-
@@ -276,7 +282,7 @@ plot(
         ),
   reset=FALSE
 )
-plot(cr_ara_ambiguus, col="black", add=TRUE)
+plot(cr_ara_ambiguus, col="green", add=TRUE)
 
 # Mapa de altitud del área de Pharomachrus mocinno
 plot(
@@ -305,6 +311,25 @@ alt_pharomachrus_mocinno
 # Ejercicios
 1. Genere un mapa de altitud para la provincia de Heredia y otro para la provincia de San José.
 ```{r}
+Heredia<- cr_provincias %>%
+  filter(provincia == "Heredia")
+plot (Heredia$geometry)
+
+cr_altitud_heredia <-
+  cr_altitud %>%
+  crop(Heredia) %>%
+  mask(Heredia)
+plot(cr_altitud_heredia)
+
+Chepe<- cr_provincias %>%
+  filter(provincia == "San José")
+plot (San José$geometry)
+
+cr_altitud_chepe <-
+  cr_altitud %>%
+  crop(Chepe) %>%
+  mask(Chepe)
+plot(cr_altitud_chepe)
 ```
 
 2. Genere un mapa de altitud para una especie diferente a las utilizadas durante la lección. Puede utilizar datos de la [Infraestructura Mundial de Información en Biodiversidad (GBIF)](https://www.gbif.org/).
